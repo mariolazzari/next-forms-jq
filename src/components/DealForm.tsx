@@ -5,6 +5,7 @@ import { DealFormState, StringMap } from "@/app/_types/Deal";
 import { useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import toast from "react-hot-toast";
+import SubmitButton from "./SubmitButton";
 
 const initialState: DealFormState<StringMap> = {};
 
@@ -112,9 +113,11 @@ function DealForm() {
       </div>
 
       <div className="text-center mt-4">
-        <button className="p-2 shadow-md border border-white rounded-xl">
+        {/* <button className="p-2 shadow-md border border-white rounded-xl">
           Submit
-        </button>
+        </button> */}
+
+        <SubmitButton />
       </div>
     </form>
   );
