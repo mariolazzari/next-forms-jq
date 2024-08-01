@@ -3,6 +3,7 @@
 import { formHandlerAction } from "@/app/_actions/formHandler";
 import { StringMap } from "@/app/_types/Deal";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 function DealForm() {
   const [errors, setErrors] = useState<StringMap | undefined>({});
@@ -10,9 +11,14 @@ function DealForm() {
   const onSubmit = async (formData: FormData) => {
     const { errors, successMsg } = await formHandlerAction(formData);
 
-    setErrors(errors);
+    if (errors) {
+      return setErrors(errors);
+    }
 
-    console.log(errors, successMsg);
+    if (successMsg) {
+      setErrors(undefined);
+      return toast.success(successMsg);
+    }
   };
 
   return (
