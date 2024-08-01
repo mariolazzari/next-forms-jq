@@ -1,12 +1,13 @@
 "use server";
 
 import { dealSchema } from "../_schemas/deal";
-import { DealFormState } from "../_types/Deal";
+import { DealFormState, StringMap } from "../_types/Deal";
 import { convertZodErrors } from "../_utils/errors";
 
 export const formHandlerAction = async (
+  prevState: DealFormState<StringMap>,
   formData: FormData
-): Promise<DealFormState<undefined>> => {
+): Promise<DealFormState<StringMap>> => {
   const deal = {
     name: formData.get("name"),
     link: formData.get("link"),

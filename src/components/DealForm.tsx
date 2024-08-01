@@ -1,29 +1,44 @@
 "use client";
 
 import { formHandlerAction } from "@/app/_actions/formHandler";
-import { StringMap } from "@/app/_types/Deal";
-import { useRef, useState } from "react";
+import { DealFormState, StringMap } from "@/app/_types/Deal";
+import { useEffect, useRef, useState } from "react";
+import { useFormState } from "react-dom";
 import toast from "react-hot-toast";
 
+const initialState: DealFormState<StringMap> = {};
+
 function DealForm() {
-  const [errors, setErrors] = useState<StringMap | undefined>({});
+  // const [errors, setErrors] = useState<StringMap | undefined>({});
+
+  const [serverState, formAction] = useFormState(
+    formHandlerAction,
+    initialState
+  );
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const onSubmit = async (formData: FormData) => {
-    const { errors, successMsg } = await formHandlerAction(formData);
+  //   const onSubmit = async (formData: FormData) => {
+  //     const { errors, successMsg } = await formHandlerAction(formData);
 
-    if (successMsg) {
-      setErrors(undefined);
-      toast.success(successMsg);
+  //     if (successMsg) {
+  //       setErrors(undefined);
+  //       toast.success(successMsg);
+  //       formRef.current?.reset();
+  //     }
+
+  //     setErrors(errors);
+  //   };
+
+  useEffect(() => {
+    if (serverState.successMsg) {
+      toast.success(serverState.successMsg);
       formRef.current?.reset();
     }
-
-    setErrors(errors);
-  };
+  }, [serverState]);
 
   return (
-    <form ref={formRef} className="w-full max-w-xl" action={onSubmit}>
+    <form ref={formRef} className="w-full max-w-xl" action={formAction}>
       <div className="flex flex-col gap-2 mb-2">
         <label htmlFor="name">Name</label>
         <input
@@ -36,8 +51,8 @@ function DealForm() {
           title="Name must be at least 5 characters"
         />
         <div className="min-h-8">
-          {errors?.name && (
-            <small className="text-red-400">{errors.name}</small>
+          {serverState.errors?.name && (
+            <small className="text-red-400">{serverState.errors.name}</small>
           )}
         </div>
       </div>
@@ -52,8 +67,8 @@ function DealForm() {
           required
         />
         <div className="min-h-8">
-          {errors?.link && (
-            <small className="text-red-400">{errors.link}</small>
+          {serverState.errors?.link && (
+            <small className="text-red-400">{serverState.errors.link}</small>
           )}
         </div>
       </div>
@@ -69,8 +84,8 @@ function DealForm() {
           minLength={5}
         />
         <div className="min-h-8">
-          {errors?.coupon && (
-            <small className="text-red-400">{errors.coupon}</small>
+          {serverState.errors?.coupon && (
+            <small className="text-red-400">{serverState.errors.coupon}</small>
           )}
         </div>
       </div>
@@ -88,8 +103,10 @@ function DealForm() {
           required
         />
         <div className="min-h-8">
-          {errors?.discount && (
-            <small className="text-red-400">{errors.discount}</small>
+          {serverState.errors?.discount && (
+            <small className="text-red-400">
+              {serverState.errors.discount}
+            </small>
           )}
         </div>
       </div>
