@@ -21,5 +21,5 @@ export const formHandlerAction = async (
     return { errors };
   }
 
-  return { successMsg: "Deal added successfully" };
+  return { successMsg: "Deal added successfully", errors: undefined };
 };

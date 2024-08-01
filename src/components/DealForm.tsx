@@ -2,27 +2,28 @@
 
 import { formHandlerAction } from "@/app/_actions/formHandler";
 import { StringMap } from "@/app/_types/Deal";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 function DealForm() {
   const [errors, setErrors] = useState<StringMap | undefined>({});
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   const onSubmit = async (formData: FormData) => {
     const { errors, successMsg } = await formHandlerAction(formData);
 
-    if (errors) {
-      return setErrors(errors);
-    }
-
     if (successMsg) {
       setErrors(undefined);
-      return toast.success(successMsg);
+      toast.success(successMsg);
+      formRef.current?.reset();
     }
+
+    setErrors(errors);
   };
 
   return (
-    <form className="w-full max-w-xl" action={onSubmit}>
+    <form ref={formRef} className="w-full max-w-xl" action={onSubmit}>
       <div className="flex flex-col gap-2 mb-2">
         <label htmlFor="name">Name</label>
         <input
